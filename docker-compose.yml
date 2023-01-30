@@ -1,0 +1,28 @@
+version: "3.9"
+services: 
+  mysql:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./mysql_data:/var/lib/mysql"
+      - "./mysql_conf:/etc/mysql/conf.d"
+      - "./mysql_log:/var/log/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: your-root-password
+    restart: always
+  rebuild:
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    container_name: rebuild
+    build: .
+    volumes: 
+      - "./data:/rb_data"
+    ports: 
+      - "18080:18080"
+    restart: always
+  redis:
+    image: "redis:alpine"
+    restart: always
+  
